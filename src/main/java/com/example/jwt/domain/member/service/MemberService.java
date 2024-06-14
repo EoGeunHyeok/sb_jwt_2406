@@ -3,7 +3,9 @@ package com.example.jwt.domain.member.service;
 
 import com.example.jwt.domain.member.entity.Member;
 import com.example.jwt.domain.member.repository.MemberRepository;
+import com.example.jwt.global.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -11,6 +13,8 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
+    private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
 
     private final MemberRepository memberRepository;
     public Optional<Member> findByUsername(String username) {
@@ -28,5 +32,15 @@ public class MemberService {
 
         return member;
 
+    }
+
+    public String genAccessToken(String username, String password) {
+        Member member = findByUsername(username).orElse(null);
+
+        if ( member == null ) return null;
+
+        if (!passwordEncoder.matches(password, member.getPassword()));
+
+        return jwtProvider.genToken(member.toClaims(), 60 * 60 * 24 * 365);
     }
 }

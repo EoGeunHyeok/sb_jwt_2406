@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-@EnableJpaAuditing // 이걸 달아?
+@EnableJpaAuditing
 public class JwtApplication {
 
 	public static void main(String[] args) {
