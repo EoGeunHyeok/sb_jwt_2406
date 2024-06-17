@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -53,6 +54,7 @@ class MemberControllerTest {
     }
 
     @Test
+    @WithUserDetails("user1")
     @DisplayName("GET /member/me => 내 정보를 확인하는 URL 이다.")
     void t2() throws Exception {
         // When
@@ -67,7 +69,8 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.resultCode").value("S-2"))// 벨류가 있는지 확인
                 .andExpect(jsonPath("$.msg").exists()) // 필드가 있는지 확인
                 .andExpect(jsonPath("$.data.member.id").exists()) // 필드가 있는지 확인
-                .andExpect(jsonPath("$.data.member.username").exists()); // 필드가 있는지 확인
+                .andExpect(jsonPath("$.data.member.username").exists())
+                .andExpect(jsonPath("$.data.member.username").value("user1"));
 
     }
 }
