@@ -8,25 +8,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 @Configuration
-@Profile({"dev","test"})
+@Profile({"dev", "test"})
 public class NotProd {
     @Bean
     CommandLineRunner initData(MemberService memberService, ArticleService articleService, PasswordEncoder passwordEncoder) {
         String password = passwordEncoder.encode("1234");
         return args -> {
-            Member admin = memberService.join("admin", password, "admin@test.com");
-            Member member1 = memberService.join("user2", password, "user2@test.com");
-            Member member2 = memberService.join("황예지", password, "user3@test.com");
+            Member amdin = memberService.join("admin", password, "admin@test.com");
+            Member member1 = memberService.join("user1", password, "user1@test.com");
+            Member member2 = memberService.join("user2", password, "user2@test.com");
 
-            articleService.write(admin, "Itzy" ,"있지");
-            articleService.write(admin, "Itzy" ,"예지");
-            articleService.write(member1, "Itzy" ,"유나");
-            articleService.write(member1, "Itzy" ,"채령");
-            articleService.write(member2, "Itzy" ,"리아");
-            articleService.write(member2, "Itzy" ,"류진");
-
+            articleService.write(amdin, "제목1", "내용1");
+            articleService.write(amdin, "제목2", "내용2");
+            articleService.write(member1, "제목3", "내용3");
+            articleService.write(member1, "제목4", "내용4");
+            articleService.write(member2, "제목5", "내용5");
+            articleService.write(member2, "제목6", "내용6");
         };
     }
 }

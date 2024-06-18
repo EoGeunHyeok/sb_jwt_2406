@@ -47,30 +47,32 @@ class MemberControllerTest {
 
         // Then
         resultActions
-                .andExpect(status().is2xxSuccessful()) // 성공했는지 확인
-                .andExpect(jsonPath("$.resultCode").value("S-1"))// 벨류가 있는지 확인
-                .andExpect(jsonPath("$.msg").exists()) // 필드가 있는지 확인
-                .andExpect(jsonPath("$.data.accessToken").exists()); // 필드가 있는지 확인
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.resultCode").value("S-1"))
+                .andExpect(jsonPath("$.msg").exists())
+                .andExpect(jsonPath("$.data.accessToken").exists());
+
     }
 
     @Test
     @WithUserDetails("user1")
     @DisplayName("GET /member/me => 내 정보를 확인하는 URL 이다.")
     void t2() throws Exception {
+
         // When
         ResultActions resultActions = mvc
                 .perform(
                         get("/api/v1/member/me")
                 )
                 .andDo(print());
+
         // Then
         resultActions
-                .andExpect(status().is2xxSuccessful()) // 성공했는지 확인
-                .andExpect(jsonPath("$.resultCode").value("S-2"))// 벨류가 있는지 확인
-                .andExpect(jsonPath("$.msg").exists()) // 필드가 있는지 확인
-                .andExpect(jsonPath("$.data.member.id").exists()) // 필드가 있는지 확인
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.resultCode").value("S-2"))
+                .andExpect(jsonPath("$.msg").exists())
+                .andExpect(jsonPath("$.data.member.id").exists())
                 .andExpect(jsonPath("$.data.member.username").exists())
                 .andExpect(jsonPath("$.data.member.username").value("user1"));
-
     }
 }

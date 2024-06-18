@@ -11,12 +11,13 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+
+
 @Getter
 @SuperBuilder
 @MappedSuperclass
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // 달아줘야 나중에 Member에서 문제없이 사용가능
-// @CreateDate, @LastModifyDate를 사용하기위해 필요
-@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class) // @CreatedDate, @LastModifiedDate를 사용하기 위해 필요
 @ToString
 public class BaseEntity {
     @Id
@@ -28,5 +29,4 @@ public class BaseEntity {
 
     @LastModifiedDate
     private LocalDateTime modifyDate;
-
 }

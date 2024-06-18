@@ -3,6 +3,7 @@ package com.example.jwt.domain.member.controller;
 import com.example.jwt.domain.member.entity.Member;
 import com.example.jwt.domain.member.service.MemberService;
 import com.example.jwt.global.rsData.RsData;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -31,36 +32,38 @@ public class MemberController {
         @NotBlank
         private String password;
     }
+
     @Getter
     @AllArgsConstructor
     public static class LoginResponse {
-        private final String accessToken;
+        private final  String accessToken;
     }
 
     @PostMapping(value = "/login", consumes = APPLICATION_JSON_VALUE)
-    // @ResponseBody -> RestController 달면 굳이 안써도 상관없음
     public RsData<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse resp) {
 
-        //테스트용
-//        resp.addHeader("Authentication", "JWT Token");
+        // 테스트용
+        // resp.addHeader("Authentication", "JWT Token");
 
-        String accessToken = memberService.genAccessToken(loginRequest.getUsername(),loginRequest.getPassword());
+        String accessToken = memberService.genAccessToken(loginRequest.getUsername(), loginRequest.getPassword());
 
         resp.addHeader("Authentication", accessToken);
 
         return RsData.of(
                 "S-1",
-                "액서스 토큰이 생성되었습니담.",
+                "액세스 토큰이 생성되었습니다.",
                 new LoginResponse(accessToken)
         );
     }
+
     @Getter
     @AllArgsConstructor
-    public static class MeResponse{
+    public static class MeResponse {
         private final Member member;
     }
+
     @GetMapping(value = "/me", consumes = ALL_VALUE)
-    public RsData<MeResponse> me(@AuthenticationPrincipal User user) {
+    public RsData<MeResponse> me (@AuthenticationPrincipal User user) {
         Member member = memberService.findByUsername(user.getUsername()).get();
 
         return RsData.of(
@@ -69,6 +72,4 @@ public class MemberController {
                 new MeResponse(member)
         );
     }
-
 }
-

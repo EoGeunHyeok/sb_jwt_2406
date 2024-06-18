@@ -17,22 +17,23 @@ import java.util.Map;
 import static lombok.AccessLevel.PROTECTED;
 
 
+@Entity
+@SuperBuilder
+@AllArgsConstructor(access = PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 @Setter
-@SuperBuilder
-@Entity
-@AllArgsConstructor(access = PROTECTED)
 @ToString(callSuper = true)
-@NoArgsConstructor(access = PROTECTED)
 public class Member extends BaseEntity {
     @Column(unique = true)
     private String username;
 
-    @JsonIgnore // password는 json에서 무시 하게 하겠다.
+    @JsonIgnore
     private String password;
 
     private String email;
 
+    // 현재 회원이 가지고 있는 권한들을 List<GrantedAuthority> 형태로 리턴
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("MEMBER"));
@@ -46,4 +47,5 @@ public class Member extends BaseEntity {
                 "username", getUsername()
         );
     }
+
 }

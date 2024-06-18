@@ -12,23 +12,21 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 
+
 @Component
 public class JwtProvider {
-
     private SecretKey cachedSecretKey;
     @Value("${custom.jwt.secretKey}")
     private String secretKeyPlain;
-
     private SecretKey _getSecretKey() {
         String keyBase64Encoded = Base64.getEncoder().encodeToString(secretKeyPlain.getBytes());
         return Keys.hmacShaKeyFor(keyBase64Encoded.getBytes());
     }
-
     public SecretKey getSecretKey() {
-        if (cachedSecretKey == null ) cachedSecretKey = _getSecretKey();
-
+        if (cachedSecretKey == null) cachedSecretKey = _getSecretKey();
         return cachedSecretKey;
     }
+
     public String genToken(Map<String, Object> claims, int seconds) {
         long now = new Date().getTime();
         Date accessTokenExpiresIn = new Date(now + 1000L * seconds);

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Optional;
-
 @Getter
 @AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class RsData<T> {
@@ -35,5 +34,4 @@ public class RsData<T> {
     public <T> RsData<T> newDataOf(T data) {
         return new RsData<T>(getResultCode(), getMsg(), data);
     }
-
 }
