@@ -115,6 +115,7 @@ public class ArticleController {
     public static class ModifyResponse {
         private final Article article;
     }
+
     @PatchMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE)
     @Operation(summary = "수정", security = @SecurityRequirement(name = "bearerAuth"))
     public RsData<ModifyResponse> modify(
@@ -133,10 +134,9 @@ public class ArticleController {
         );
 
 
-
         RsData canModifyRs = articleService.canModify(member, opArticle.get());
 
-        if(canModifyRs.isFail()) return canModifyRs;
+        if (canModifyRs.isFail()) return canModifyRs;
 
         RsData<Article> modifyRs = articleService.modify(opArticle.get(), modifyRequest.getSubject(), modifyRequest.getContent());
 
@@ -144,6 +144,41 @@ public class ArticleController {
                 modifyRs.getResultCode(),
                 modifyRs.getMsg(),
                 new ModifyResponse(modifyRs.getData())
+        );
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class DeleteResponse {
+        private final Article article;
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @Operation(summary = "삭제", security = @SecurityRequirement(name = "bearerAuth"))
+    public RsData<DeleteResponse> remove(
+            @AuthenticationPrincipal User user,
+            @PathVariable("id") Long id
+    ){
+        Member member = memberService.findByUsername(user.getUsername()).orElseThrow();
+
+        Optional<Article> opArticle = articleService.findById(id);
+
+        if (opArticle.isEmpty()) return RsData.of(
+                "F-1",
+                "%d번 게시물은 존재하지 않습니다.".formatted(id),
+                null
+        );
+
+        RsData canDeleteRs = articleService.canDelete(member, opArticle.get());
+
+        if ( canDeleteRs.isFail() ) return canDeleteRs;
+
+        articleService.deleteById(id);
+
+        return RsData.of(
+                "S-5",
+                "%d번 게시물이 삭제되었습니다.".formatted(id),
+                null
         );
     }
 }
